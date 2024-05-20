@@ -9,16 +9,17 @@ import java.net.http.HttpResponse;
 public class ConsumoApi {
 
     public String obterDados (String endereco) {
-        HttpClient client = HttpClient.newHttpClient();
+        HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.ALWAYS)
+                .build();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(endereco))
                 .build();
-        HttpResponse <String> response = null;
-
+        HttpResponse<String> response = null;
         try {
             response = client
                     .send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e ) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
