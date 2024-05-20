@@ -1,5 +1,6 @@
 package br.com.alura.challengeliterAlura;
 
+import br.com.alura.challengeliterAlura.service.ConsumoApi;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,5 +14,6 @@ public class ChallengeLiterAluraApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		
 	}
 }
