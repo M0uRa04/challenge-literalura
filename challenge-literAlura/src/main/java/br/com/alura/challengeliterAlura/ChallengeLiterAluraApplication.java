@@ -1,5 +1,6 @@
 package br.com.alura.challengeliterAlura;
 
+import br.com.alura.challengeliterAlura.principal.Principal;
 import br.com.alura.challengeliterAlura.service.ConsumoApi;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +15,7 @@ public class ChallengeLiterAluraApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		
+		Principal principal = new Principal();
+		principal.exibeMenu();
 	}
 }
