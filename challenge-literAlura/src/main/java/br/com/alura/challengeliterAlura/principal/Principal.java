@@ -1,10 +1,13 @@
 package br.com.alura.challengeliterAlura.principal;
 
+import br.com.alura.challengeliterAlura.dto.ResponseDTO;
 import br.com.alura.challengeliterAlura.service.ConsumoApi;
 import br.com.alura.challengeliterAlura.service.ConverteDados;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
+@Component
 public class Principal {
 
     private Scanner leitura = new Scanner(System.in);
@@ -81,6 +84,8 @@ public class Principal {
         var tituloLivro = leitura.nextLine();
         var json = consumoApi.obterDados(ENDERECO + tituloLivro.replaceAll(" ", "%20").trim());
         System.out.println(json);
+        var reponse = conversor.converterDados(json, ResponseDTO.class);
+        System.out.println(reponse);
     }
 
 }
