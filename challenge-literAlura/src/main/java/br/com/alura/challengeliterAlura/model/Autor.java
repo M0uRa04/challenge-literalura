@@ -4,7 +4,7 @@ import br.com.alura.challengeliterAlura.dto.AutorDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -19,27 +19,34 @@ public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String nome;
     @Column(nullable = false)
-    private LocalDate dataNascimento;
-    private LocalDate dataFalecimento;
+    private Integer anoNascimento;
+    private Integer anoFalecimento;
 
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Livro> livros;
+    private List<Livro> livros = new ArrayList<>();
+
 
     public Autor (AutorDTO autorDTO) {
         this.nome = autorDTO.nome();
-        this.dataNascimento = LocalDate.parse(autorDTO.dataNascimento());
+        this.anoNascimento = Integer.valueOf(autorDTO.dataNascimento());
 
         try {
-            this.dataFalecimento = LocalDate.parse(autorDTO.dataFalecimento());
+            this.anoFalecimento = Integer.valueOf(autorDTO.dataFalecimento());
         } catch (NullPointerException e) {
-            this.dataNascimento = null;
+            this.anoFalecimento = null;
         }
     }
 
-    public void setLivros (List<Livro> livros) {
+
+    public List<Livro> getlivros () {
+        return livros;
+    }
+
+    public void setLivros(Livro livro) {
+        livros.add(livro);
         livros.forEach(l -> l.setAutor(this));
         this.livros = livros;
     }
