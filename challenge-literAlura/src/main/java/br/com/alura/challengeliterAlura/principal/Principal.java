@@ -8,8 +8,6 @@ import br.com.alura.challengeliterAlura.service.ConverteDados;
 import br.com.alura.challengeliterAlura.service.AutorService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Principal {
@@ -35,7 +33,8 @@ public class Principal {
                 3 - Listar autores registrados
                 4 - Listar autores vivos em determinado ano
                 5 - Listar livros em um determinado idioma
-                
+                6 - Listar top 5 livros mais baixados
+                7 - Listar livros do autor buscado
                 
                 0 - Sair                                 
                 """;
@@ -46,39 +45,28 @@ public class Principal {
 
             switch (opcao) {
                 case 1:
-                    salvaLivro();
+                    salvar();
                     break;
-//                case 2:
-//                    buscarEpisodioPorSerie();
-//                    break;
-//                case 3:
-//                    listarSeriesBuscadas();
-//                    break;
-//
-//                case 4:
-//                    buscarSeriesPorTitulo();
-//                    break;
-//                case 5:
-//                    buscarSeriesPorAtor();
-//                    break;
-//                case 6:
-//                    buscarTop5Series();
-//                    break;
-//                case 7:
-//                    buscarSeriesPorCategoria();
-//                    break;
-//                case 8:
-//                    filtrarSeriesPorTemporadaEAvaliacao();
-//                    break;
-//                case 9:
-//                    buscarEpisodioPorTrecho();
-//                    break;
-//                case 10:
-//                    topEpisodiosPorSerie();
-//                    break;
-//                case 11:
-//                    buscarEpisodiosDepoisDeUmaData();
-//                    break;
+                case 2:
+                    listaLivrosResgistrados();
+                    break;
+                case 3:
+                    listaAutoresResgistrados();
+                    break;
+
+                case 4:
+                    ListaAutoresVivosEmDeterminadoAno();
+                    break;
+                case 5:
+                    ListaLivrosEmDeterminadoIdioma();
+                    break;
+                case 6:
+                    listaTop5LivroMaisBaixados();
+                    break;
+
+                case 7:
+                    listaLivrosPorAutor();
+                    break;
 
                 case 0:
                     System.out.println("Saindo...");
@@ -90,7 +78,41 @@ public class Principal {
 
     }
 
-    private ResponseDTO getDadosLivro () {
+    private void listaLivrosPorAutor() {
+        service.listaLivrosPorAutor();
+    }
+
+    private void listaTop5LivroMaisBaixados() {
+        service.buscarTop5LivroMaisBaixados();
+    }
+
+    private void ListaLivrosEmDeterminadoIdioma() {
+        service.ListaLivrosEmDeterminadoIdioma();
+    }
+
+    private void ListaAutoresVivosEmDeterminadoAno() {
+        service.listarAutoresVivosEmDeterminadoAno();
+    }
+
+
+    private void listaAutoresResgistrados() {
+        service.listarAutoresCadastrados();
+    }
+
+    private void listaLivrosResgistrados() {
+        service.listarLivrosCadastrados();
+    }
+
+    private Livro getDadosLivroEAutor () {
+        var responseDTO = getDados();
+        var autor = new Autor(responseDTO.results().getFirst().autorDTOList().getFirst());
+        var livro = new Livro(responseDTO.results().getFirst());
+        autor.setLivros(livro);
+        return livro;
+    }
+
+
+    private ResponseDTO getDados() {
         System.out.println("Digite o titulo do livro que deseja buscar: ");
         var livroBuscado = leitura.nextLine();
         var json = consumoApi.obterDados(ENDERECO + livroBuscado.replace(" ", "%20"));
@@ -98,14 +120,10 @@ public class Principal {
         return responseDTO;
     }
 
-    private void salvaLivro() {
-        var responseDTO = getDadosLivro();
-        var autorDTO = responseDTO.results().getFirst().autorDTOList().getFirst();
-        Autor autor = new Autor(autorDTO);
-        Livro livro = new Livro(responseDTO.results().getFirst());
-        autor.setLivros(livro);
-        System.out.println(livro);
-        service.inserirAutorELivroNoBanco(autor);
+
+    private void salvar () {
+        var livro = getDadosLivroEAutor();
+        service.salvarLivroDeAutorJaCadastrado(livro.getAutor(), livro);
     }
 
 

@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +20,7 @@ public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String nome;
     @Column(nullable = false)
     private Integer anoNascimento;
@@ -40,8 +41,14 @@ public class Autor {
         }
     }
 
+    public List<String> listaTituloLivros () {
+        var titulosDosLivrosListados = livros.stream()
+                .map(l -> l.getTitulo())
+                .collect(Collectors.toList());
+        return titulosDosLivrosListados;
+    }
 
-    public List<Livro> getlivros () {
+    public List<Livro> getLivros() {
         return livros;
     }
 
